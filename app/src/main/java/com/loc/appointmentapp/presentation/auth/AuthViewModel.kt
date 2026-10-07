@@ -30,7 +30,7 @@ class AuthViewModel @Inject constructor(
                 onSuccess = { user ->
                     when (user.role) {
                         Role.ADMIN -> _authState.value = AuthState.NavigateToAdmin
-                        Role.CLIENT -> _authState.value = AuthState.NavigateToClient
+                        Role.CLIENT -> _authState.value = AuthState.NavigateToClient(user.id) // ID buraya eklendi
                     }
                 },
                 onFailure = { hata ->
@@ -41,11 +41,10 @@ class AuthViewModel @Inject constructor(
     }
 }
 
-// Ekranın alabileceği durumlar
 sealed class AuthState {
     object Idle : AuthState()
     object Loading : AuthState()
     object NavigateToAdmin : AuthState()
-    object NavigateToClient : AuthState()
+    data class NavigateToClient(val musteriId: String) : AuthState() // Parametre eklendi
     data class Error(val message: String) : AuthState()
 }
